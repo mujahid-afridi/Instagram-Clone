@@ -8,6 +8,7 @@ import Home from './pages/Home.jsx'
 import useGetCurrentUser from './hooks/useGetCurrentUser.jsx'
 import { useEffect } from 'react'
 import ProfilePage from './pages/profilePage.jsx'
+import EditProfile from './pages/EditProfile.jsx'
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       <Route path='/forgot-password' element={!userData ? <ForgotPassword /> : <Navigate to='/' />}  />
       <Route path='/' element={userData ? <Home /> : <Navigate to='/signin' />} />
       <Route path='/profile/:username' element={userData ? <ProfilePage /> : <Navigate to='/signin' />} />
+      <Route path='/editprofile' element={userData ? <EditProfile /> : <Navigate to='/signin' /> } />
     </Routes>
   )
 }

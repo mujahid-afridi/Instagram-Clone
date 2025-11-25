@@ -7,6 +7,6 @@ const userRouter = express.Router()
 userRouter.get('/current', currentUser, getCurrentUser) //Get current user
 userRouter.get('/suggested',currentUser, suggestedUser) //get suggested user exclude current user
 userRouter.get('/getProfile/:username', getProfile)
-userRouter.post('/edit', currentUser, upload.single("profileImage"), editProfile)
+userRouter.post('/editprofile', currentUser, upload.single("profileImage"), editProfile)
 
 export default userRouter

@@ -96,7 +96,7 @@ const ProfilePage = ()=>{
         </div>
         {profileData?._id == userData?._id && <div className="w-full flex justify-center items-center mt-[1rem]">
             <div>
-                <button className="py-[0.3rem] px-[1rem] bg-white text-black text-md rounded-md">Edit Profile</button>
+                <button className="py-[0.3rem] px-[1rem] bg-white text-black text-md rounded-md" onClick={()=> navigate('/editprofile')}>Edit Profile</button>
             </div>
         </div> }
         {profileData?._id !== userData?._id && <div className="w-full flex justify-center items-center gap-[2rem] mt-[1rem]">

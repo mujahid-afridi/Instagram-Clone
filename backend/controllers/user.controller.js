@@ -27,13 +27,12 @@ export const suggestedUser = async (req, res)=>{
 
 export const editProfile = async (req, res)=>{
     try{
-        const{username, name, email, bio, profession, gender} = req.body
-        if(!username || !email || !name ) return res.status(400).json({message : "username or email or name is empty"})
+        const{username, name, bio, profession, gender} = req.body
         const user = await User.findById(req.userId).select("-password")
         if(!user) return res.status(400).json({message : "User does not exist"})
         
-        const isUsernameExist = await User.findOne({username}).select("-password")
-        if(isUsernameExist) return res.status(400).json({message : 'username already exist'})
+        const isUserExist = await User.findOne({username}).select("-password")
+        if(isUserExist) return res.status(400).json({message : 'username already in use'})
 
         let profileImage;
         if(req.file){
@@ -42,7 +41,6 @@ export const editProfile = async (req, res)=>{
 
         user.username = username
         user.name = name
-        user.email = email
         user.profileImage = profileImage
         user.bio = bio
         user.profession = profession
