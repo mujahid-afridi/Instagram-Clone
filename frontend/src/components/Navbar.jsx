@@ -16,8 +16,8 @@ const Navbar = ()=>{
             <IoSearchSharp className="text-xl cursor-pointer"/>
             <FaRegPlusSquare className="text-xl cursor-pointer"/>
             <GoVideo className="text-xl cursor-pointer"/>
-            <div className=" flex justify-center items-center bg-gradient-to-l from-blue-800 to-blue-400 w-[2rem] h-[2rem] rounded-[50%] cursor-pointer" onClick={()=> navigate(`/profile/${userData?.username}`)}>
-                <img src={userData?.profileImage || dp} alt="dp" className="rounded-[50%] " />
+            <div className=" flex justify-center items-center    cursor-pointer rounded-[50%]" onClick={()=> navigate(`/profile/${userData?.username}`)}>
+                <img src={userData?.profileImage || dp} alt="dp" className="rounded-[50%] w-[2rem] h-[2rem]" />
             </div>
         </div>
     </div>

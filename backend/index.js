@@ -3,8 +3,10 @@ import dotenv from "dotenv"
 import connectDB from "./config/db.js"
 import authRouter from "./routes/auth.router.js"
 import userRouter from "./routes/user.router.js"
+import postRouter from "./routes/post.router.js"
 import cookieParser from "cookie-parser"
 import cors from "cors"
+import loopRouter from "./routes/loop.router.js"
 
 const app = express()
 dotenv.config()
@@ -20,6 +22,8 @@ app.use(cookieParser()) //Allow us to access cookies in req without that req.coo
 
 app.use("/api/auth",authRouter) // All routes of Authentication and authorzation are handle here
 app.use("/api/user", userRouter) // All routes of user
+app.use('/api/post', postRouter)
+app.use('/api/loop', loopRouter)
 
 
 

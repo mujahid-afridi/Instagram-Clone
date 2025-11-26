@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const postSchema = new mongoose.Schema({
     author : {
         type: mongoose.Schema.Types.ObjectId,
-        ref : "Post",
+        ref : "User",
         required : true
     },
     mediaType : {
@@ -26,11 +26,15 @@ const postSchema = new mongoose.Schema({
     ],
     comments : [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref : "User"
+            message : {
+                type : String
+            },
+            author : {
+                type: mongoose.Schema.Types.ObjectId,
+                ref : "User"
+            }
         }
     ]
-
 }, {timestamps : true})
 
 const Post = mongoose.model("Post", postSchema)

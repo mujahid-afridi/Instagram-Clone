@@ -4,7 +4,7 @@ import fs from "fs"
 
 export const getCurrentUser = async (req, res)=>{
     try{
-        const user = await User.findById(req.userId)
+        const user = await User.findById(req.userId).populate("posts loops")
         if(!user) return res.status(400).json({message : "user not found"})
         return res.status(200).json(user)
     }
@@ -30,12 +30,15 @@ export const editProfile = async (req, res)=>{
         const{username, name, bio, profession, gender} = req.body
         const user = await User.findById(req.userId).select("-password")
         if(!user) return res.status(400).json({message : "User does not exist"})
+        if(username !== user.username){
+            const isUserExist = await User.findOne({username}).select("-password")
+            if(isUserExist) return res.status(400).json({message : 'username already in use'})
+        }
         
-        const isUserExist = await User.findOne({username}).select("-password")
-        if(isUserExist) return res.status(400).json({message : 'username already in use'})
 
         let profileImage;
         if(req.file){
+            console.log("Uploadd on cloudinary image = ", req.file)
             profileImage = await uploadOnCloudinary(req.file.path)
         }
 
