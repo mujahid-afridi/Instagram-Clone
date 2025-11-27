@@ -7,7 +7,7 @@ import upload from '../middlewares/multer.js'
 const postRouter = express.Router()
 
 postRouter.post('/uploadPost',currentUser,upload.single("media"), uploadPost)
-postRouter.get('/allposts',currentUser, getAllPosts)
+postRouter.get('/allPosts',currentUser, getAllPosts)
 postRouter.get('/like/:postId',currentUser , like)
 postRouter.post('/comment/:postId',currentUser, comment)
 postRouter.post('/saved/:postId',currentUser , saved)

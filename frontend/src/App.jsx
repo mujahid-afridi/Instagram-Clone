@@ -9,6 +9,7 @@ import useGetCurrentUser from './hooks/useGetCurrentUser.jsx'
 import { useEffect } from 'react'
 import ProfilePage from './pages/profilePage.jsx'
 import EditProfile from './pages/EditProfile.jsx'
+import Upload from './pages/Upload.jsx'
 
 
 function App() {
@@ -20,8 +21,9 @@ function App() {
       <Route path='/signin' element={!userData ? <SignIn/> : <Navigate to='/' />} />
       <Route path='/forgot-password' element={!userData ? <ForgotPassword /> : <Navigate to='/' />}  />
       <Route path='/' element={userData ? <Home /> : <Navigate to='/signin' />} />
-      <Route path='/profile/:username' element={userData ? <ProfilePage /> : <Navigate to='/signin' />} />
+      <Route path='/profile/:username' element={userData ? <ProfilePage /> : <Navigate to='/signin'/>} />
       <Route path='/editprofile' element={userData ? <EditProfile /> : <Navigate to='/signin' /> } />
+      <Route path='/upload' element={userData ? <Upload /> : <Navigate to='/signin' />}/>
     </Routes>
   )
 }

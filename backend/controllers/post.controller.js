@@ -19,7 +19,7 @@ export const uploadPost = async(req, res)=>{
         user.posts.push(post._id)
         await user.save()
 
-        const populatedPost = await Post.find(post._id).populate("author")
+        const populatedPost = await Post.find(post._id).populate("author", "name username profileImage")
         return res.status(200).json(populatedPost)
     }
     catch(error){
@@ -49,7 +49,7 @@ export const getAllPosts = async (req, res)=>{
             {path : "author", select : "name username profileImage"},
             {path : "comments.author", select : "name username profileImage"},
             {path : "likes", select:"name username profileImage"}
-        ])
+        ]).sort({createdAt : -1})
         return res.status(200).json(posts)
     }
     catch(error){

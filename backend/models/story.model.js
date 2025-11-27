@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const storySchema = new mongoose.Schema({
     author : {
         type: mongoose.Schema.Types.ObjectId,
-        ref : "Post",
+        ref : "User",
         required : true
     },
     mediaType : {
@@ -18,7 +18,7 @@ const storySchema = new mongoose.Schema({
     viewers : [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref : "Post" 
+            ref : "User" 
         }
     ],
     createdAt : {

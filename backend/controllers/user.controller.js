@@ -38,7 +38,6 @@ export const editProfile = async (req, res)=>{
 
         let profileImage;
         if(req.file){
-            console.log("Uploadd on cloudinary image = ", req.file)
             profileImage = await uploadOnCloudinary(req.file.path)
         }
 

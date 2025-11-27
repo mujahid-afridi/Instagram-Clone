@@ -7,6 +7,7 @@ import postRouter from "./routes/post.router.js"
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import loopRouter from "./routes/loop.router.js"
+import storyRouter from "./routes/story.router.js"
 
 const app = express()
 dotenv.config()
@@ -24,6 +25,7 @@ app.use("/api/auth",authRouter) // All routes of Authentication and authorzation
 app.use("/api/user", userRouter) // All routes of user
 app.use('/api/post', postRouter)
 app.use('/api/loop', loopRouter)
+app.use('/api/story', storyRouter)
 
 
 

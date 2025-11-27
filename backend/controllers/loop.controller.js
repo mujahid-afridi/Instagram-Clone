@@ -7,7 +7,7 @@ export const uploadLoop = async(req, res)=>{
         const {caption} = req.body
         let media;
         if(req.file){
-            media = uploadOnCloudinary(req.file.path)
+            media = await uploadOnCloudinary(req.file.path)
         }
         const loop = await Loop.create({caption, media, author:req.userId})
 
