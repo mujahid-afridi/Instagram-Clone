@@ -9,7 +9,6 @@ import { ClipLoader } from "react-spinners";
 
 const EditProfile = ()=>{
     const {userData} = useSelector(state=> state.user)
-
     const [name, setName] = useState(userData.name || "")
     const [username, setUserame] = useState(userData.username || "")
     const [bio, setBio] = useState(userData.bio || "")
@@ -18,7 +17,7 @@ const EditProfile = ()=>{
     const [preview, setPreview] = useState(userData.profileImage || dp)
     const [backendImage, setBackendImage] = useState(null)
 
-    const [loading, setLoading] = useState('flase')
+    const [loading, setLoading] = useState('flase') 
 
     const navigate = useNavigate()
     const imageInput = useRef() 

@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { setProfileData } from "../redux/userSlice.js";
 import { IoArrowBackSharp } from "react-icons/io5";
-import dp from "../assets/dp.png"
+import dp from '../assets/dp.png'
 import Navbar from "../components/Navbar.jsx";
+import FollowBtn from "../components/FollowBtn.jsx";
 
 const ProfilePage = ()=>{
     const navigate = useNavigate()
@@ -17,7 +18,6 @@ const ProfilePage = ()=>{
         try{
            const result = await axios.get(`http://localhost:4000/api/user/getProfile/${username}`, {withCredentials:true})
             dispatch(setProfileData(result.data))
-            console.log("Get Profile : ", result.data)
         }
         catch(error){
             console.log(error)
@@ -52,20 +52,11 @@ const ProfilePage = ()=>{
             <div>
                 <div className="flex items-center gap-[1.5rem]">
                     <div className="flex relative">
-                        {/* {profileData && profileData?.followers.slice(0,3).map((user)=>{
-                            <div>
-                                <img src={user?.profileImage || dp} alt="profile image" className="w-[4rem] h-[4rem] rounded-[50%] md:w-[6rem] md:h-[6rem] lg:w-[7rem] lg:h-[7rem]" />
+                        {profileData && profileData?.followers?.slice(0,3).map((user, index)=>{
+                            return <div>
+                                <img src={user?.profileImage || dp} alt="profile image" className={`w-[2rem] h-[2rem] rounded-[50%] border-[1px] ${index > 0 ? `absolute left-[${index*8}px]` : ""}` }/>
                             </div>
-                        })} */}
-                        <div>
-                           <img src={profileData?.profileImage || dp} alt="profile image" className="w-[2rem] h-[2rem] rounded-[50%] border-[1px]" />
-                        </div>
-                        <div className="">
-                           <img src={profileData?.profileImage || dp} alt="profile image" className="w-[2rem] h-[2rem] rounded-[50%] border-[1px]  absolute left-[8px] " />
-                        </div>
-                        <div className="">
-                           <img src={profileData?.profileImage || dp} alt="profile image" className="w-[2rem] h-[2rem] rounded-[50%]  border-[1px] absolute left-[16px]" />
-                        </div>
+                        })}                        
                     </div>
                     <div className="text-lg text-white">{profileData?.followers.length}</div>
                 </div>
@@ -74,24 +65,15 @@ const ProfilePage = ()=>{
             <div>
                 <div className="flex items-center gap-[1.5rem]">
                     <div className="flex relative">
-                        {/* {profileData && profileData?.following.slice(0,3).map((user)=>{
-                            <div>
-                                <img src={user?.profileImage || dp} alt="profile image" className="w-[4rem] h-[4rem] rounded-[50%] md:w-[6rem] md:h-[6rem] lg:w-[7rem] lg:h-[7rem]" />
+                        {profileData && profileData?.following?.slice(0,3).map((user, index)=>{
+                           return  <div key={index}>
+                                <img src={user?.profileImage || dp} alt="profile image" className={`w-[2rem] h-[2rem] rounded-[50%] border-[1px] ${index> 0 ? `absolute left-[${index*8}px] `: ""}`} />
                             </div>
-                        })} */}
-                        <div>
-                           <img src={profileData?.profileImage || dp} alt="profile image" className="w-[2rem] h-[2rem] rounded-[50%] border-[1px]" />
-                        </div>
-                        <div className="">
-                           <img src={profileData?.profileImage || dp} alt="profile image" className="w-[2rem] h-[2rem] rounded-[50%] border-[1px]  absolute left-[8px] " />
-                        </div>
-                        <div className="">
-                           <img src={profileData?.profileImage || dp} alt="profile image" className="w-[2rem] h-[2rem] rounded-[50%]  border-[1px] absolute left-[16px]" />
-                        </div>
+                        })}
                     </div>
                     <div className="text-lg text-white">{profileData?.following.length}</div>
                 </div>
-                <div className="text-sm text-gray-300">Following</div>
+                <p className="text-sm text-gray-300">Following</p>
             </div>
         </div>
         {profileData?._id == userData?._id && <div className="w-full flex justify-center items-center mt-[1rem]">
@@ -103,10 +85,8 @@ const ProfilePage = ()=>{
             <div>
                 <button className="py-[0.3rem] px-[1rem] bg-white text-black text-md rounded-md">Edit Profile</button>
             </div>
-            <div>
-                <button className="py-[0.3rem] px-[1rem] bg-white text-black text-md rounded-md">Follow</button>
-            </div>
-        </div> }
+            <FollowBtn tailwind={"py-[0.3rem] px-[1rem] bg-white text-black text-md rounded-md"} targetUserId={profileData?._id} onFollowChange={handleProfile} />
+        </div>}
         <div className="w-full flex flex-col items-center mt-[1rem]">
             <div className="w-full max-w-[900px] bg-white min-h-[100vh] text-white rounded-tl-4xl rounded-tr-4xl">
                 <Navbar />

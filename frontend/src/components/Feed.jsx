@@ -30,7 +30,7 @@ const Feed = ()=>{
             <StoryDp  />
             
         </div>
-        <div className="bg-amber-100 rounded-tl-4xl rounded-tr-4xl min-h-[100vh] px-[1rem] pt-[1rem] ">
+        <div className="bg-amber-100 rounded-tl-4xl rounded-tr-4xl min-h-[100vh] px-[1rem] pt-[1rem]  flex flex-col gap-[1rem]">
             {postData.map((post, index)=>{
                 return <Post post={post} key={index}/>
             })}

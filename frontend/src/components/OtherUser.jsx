@@ -1,6 +1,7 @@
 import React from "react"
 import dp from "../assets/dp.png"
 import { useNavigate } from "react-router-dom"
+import FollowBtn from "./FollowBtn"
 const OtherUser = ({users})=>{
     const navigate = useNavigate()
     return (
@@ -15,8 +16,8 @@ const OtherUser = ({users})=>{
                             <p className="text-gray-400">{user.name}</p>
                         </div>
                         <div className="">
-                            <button className="py-[0.5rem] px-[1rem] rounded-lg bg-white text-gray-700 cursor-pointer">Follow</button>
-                            </div>
+                            <FollowBtn tailwind={"py-[0.5rem] px-[1rem] rounded-lg bg-white text-gray-700 cursor-pointer"} targetUserId={user?._id}/>
+                        </div>
                     </div>
             </div>
         })
