@@ -72,6 +72,8 @@ export const like = async (req, res)=>{
         }
         await post.save()
         await post.populate("likes")
+        await post.populate("author", "name username profileImage")
+
         return res.status(200).json(post)
     }
     catch(error){
@@ -91,6 +93,7 @@ export const comment = async (req, res)=>{
 
         await post.save()
         await post.populate("author", "name username profileImage")
+        await post.populate("likes")
         await post.populate("comments.author")
         return res.status(200).json(post)
     }   
@@ -103,16 +106,15 @@ export const comment = async (req, res)=>{
 export const saved = async(req, res)=>{
     try{
         const postId = req.params.postId
-        if(!postId) return res.status(400).json({message : "Post is empty"})
         const post = await Post.findById(postId)
         if(!post) return res.status(400).json({message : "Post does not found"})
         const user = await User.findById(req.userId)
         if(!user) return res.status(400).json({message : "User does not exist"})
-        const alreadySaved = user.saved.some( savedPost => savedPost._id.toString() !== post._id.toString() )
+        const alreadySaved = user.saved.some( savedPost => savedPost._id.toString() === post._id.toString() )
         if(alreadySaved){
-            user.saved.unshift(post._id)
-        }else{
             user.saved = user.saved.filter(savedPost=> savedPost._id.toString() !== post._id.toString())
+        }else{
+            user.saved.unshift(post._id)
         }
         
         await user.save()
@@ -123,3 +125,5 @@ export const saved = async(req, res)=>{
         return res.status(500).json({message:`Error occured in saved to Post: ${error}`})
     }
 }
+
+

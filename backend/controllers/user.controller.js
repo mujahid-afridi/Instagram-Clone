@@ -6,6 +6,7 @@ export const getCurrentUser = async (req, res)=>{
     try{
         const user = await User.findById(req.userId).populate("posts loops")
         if(!user) return res.status(400).json({message : "user not found"})
+        await user.populate('saved')
         return res.status(200).json(user)
     }
     catch(error){
@@ -62,10 +63,42 @@ export const getProfile = async (req, res)=>{
         const username = req.params.username
         const user = await User.findOne({username}).select('-password')
         if(!user) return res.status(400).json({message : "User does not exist"})
-        
+        await user.populate("followers")
+        await user.populate("following")
         return res.status(200).json(user)
     }
     catch(error){
         return res.status(500).json({message : `Error occured in getting profile : ${error}`})
+    }
+}
+
+
+export const follow = async(req, res)=>{
+    try{      
+        const targetUserId = req.params.targetUserId
+        const targetUser  = await User.findById(targetUserId)
+        if(!targetUser) return res.status(400).json({message : "targetUser does not found"})
+        const currentUser = await User.findById(req.userId)
+        const alreadyFollow = targetUser.followers.some(followerId=> followerId.toString() === currentUser._id.toString())
+        if(alreadyFollow){
+            targetUser.followers = targetUser.followers.filter(followerId=> followerId.toString() !== currentUser._id.toString())
+            currentUser.following = currentUser.following.filter(followingId=> followingId.toString() !== targetUser._id.toString())
+            await targetUser.save()
+            await currentUser.save()
+            return res.status(200).json({
+                following : false,
+                message : `successfully unfollow`})
+        }else{
+            targetUser.followers.push(currentUser._id)
+            currentUser.following.push(targetUser._id)
+            await targetUser.save()
+            await currentUser.save()
+            return res.status(200).json({
+                following : true,
+                message : `successfully follow`})
+        } 
+    }
+    catch(error){
+        return res.status(500).json({message: `Error occured in follow : ${error}`})
     }
 }
