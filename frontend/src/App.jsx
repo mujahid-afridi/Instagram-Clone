@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 import ProfilePage from './pages/profilePage.jsx'
 import EditProfile from './pages/EditProfile.jsx'
 import Upload from './pages/Upload.jsx'
+import Loops from './pages/Loops.jsx'
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       <Route path='/profile/:username' element={userData ? <ProfilePage /> : <Navigate to='/signin'/>} />
       <Route path='/editprofile' element={userData ? <EditProfile /> : <Navigate to='/signin' /> } />
       <Route path='/upload' element={userData ? <Upload /> : <Navigate to='/signin' />}/>
+      <Route path='/loops' element={userData ? <Loops /> : <Navigate to='/signin' />} />
     </Routes>
   )
 }

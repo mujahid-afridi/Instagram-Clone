@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import VideoPlayer from "./VideoPlayer.jsx";
 import { FaHeart } from "react-icons/fa";
 import { LuMessageSquareText } from "react-icons/lu";
@@ -55,7 +55,34 @@ const Post = ({post})=>{
         }
     }
 
-    return <div className="bg-white w-[full] min-h-450px  p-[10px]">
+
+    const videoRef = useRef()
+        useEffect(()=>{
+            const observer = new IntersectionObserver(([entry])=>{
+                const video = videoRef.current
+                if(!video) return;
+                if(entry.isIntersecting){
+                    // video.muted = false
+                    video.play()
+                }else{
+                    video.pause()
+                    // video.muted = true
+                }
+            }, {threshold : 0.9})
+            
+            if(videoRef.current){
+                observer.observe(videoRef.current)
+            }
+    
+            return ()=> {
+                if(videoRef.current){
+                    observer.unobserve(videoRef.current)
+                }
+            }
+    
+    }, [])
+
+    return <div className="bg-white w-[full] min-h-450px  p-[10px] rounded-2xl">
         <div className="flex justify-between items-center">
             <div className="flex gap-[8px] items-center">
                 <div><img src={post.author?.profileImage} alt="profileImage" className="w-[4rem] h-[4rem] rounded-[50%]" /></div>
@@ -63,9 +90,9 @@ const Post = ({post})=>{
             </div>
             {post.author?._id != userData._id && <FollowBtn tailwind={"bg-black text-white text-lg font-bold px-[1rem] py-[7px] rounded-2xl"} targetUserId={post.author?._id} />}
         </div>
-        <div className="mt-[10px] flex justify-center">
+        <div className="mt-[10px] flex justify-center max-h-[50vh]">
             {post.mediaType == "image" && <img src={post?.media} alt="post image" className="w-[70%] rounded-xl"/>}
-            {post.mediaType == "video" && <video src={post?.media} autoPlay muted loop controls className="w-[70%] rounded-xl" /> }
+            {post.mediaType == "video" && <video src={post?.media} muted  loop controls className="w-[70%] rounded-xl" ref={videoRef} /> }
         </div>
         <div className="flex justify-between items-center mt-[10px]">
             <div className="flex gap-[8px] items-center">
@@ -94,7 +121,6 @@ const Post = ({post})=>{
             </div>    
         </div>}
         {post.caption && <div className="mt-[10px]">{post.caption}</div>}
-        
     </div>
 }
 

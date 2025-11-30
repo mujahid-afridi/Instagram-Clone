@@ -65,6 +65,24 @@ export const getProfile = async (req, res)=>{
         if(!user) return res.status(400).json({message : "User does not exist"})
         await user.populate("followers")
         await user.populate("following")
+        await user.populate(
+            {
+                path : "saved",
+                populate:[
+                    {
+                        path : "author",
+                        select : "name username profileImage"
+                    },
+                    {
+                        path : "comments",
+                        populate : {
+                            path : "author",
+                            select : "name username profileImage"
+                        }
+                    }
+                ]
+            }
+        )
         return res.status(200).json(user)
     }
     catch(error){

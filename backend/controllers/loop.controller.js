@@ -27,11 +27,11 @@ export const uploadLoop = async(req, res)=>{
 
 export const getAllLoops = async (req, res)=>{
     try{
-        const posts = await Loop.find({}).populate("author", "name username profileImage")
+        const loops = await Loop.find({}).populate("author", "name username profileImage")
         .populate("comments.author", "name username profileImage")
-        .populate("likes", "name username profileImage")
+        .populate("likes")
         
-        return res.status(200).json(posts)
+        return res.status(200).json(loops)
     }
     catch(error){
         return res.status(500).json({message:`Error occured in getAllLoops: ${error}`})
@@ -51,10 +51,11 @@ export const like = async (req,res)=>{
         if(alreadyLiked){
             loop.likes = loop.likes.filter(likedUser=> likedUser._id.toString() !== user._id.toString())
         }else{
-            loop.likes.unshift(user._id)           
+            loop.likes.push (user._id)           
         }
         await loop.save()
         await loop.populate("likes")
+        await loop.populate("author")
         return res.status(200).json(loop)
     }
     catch(error){
