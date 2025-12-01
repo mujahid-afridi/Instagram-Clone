@@ -74,6 +74,7 @@ export const comment = async(req, res)=>{
         if(!user) return res.status(400).json({message : "User does not exist"})
         loop.comments.unshift({message, author: user._id})
         await loop.save()
+        await loop.populate("author")
         await loop.populate("comments.author")
         return res.status(200).json(loop)
     }

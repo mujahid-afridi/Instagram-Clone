@@ -8,7 +8,7 @@ import { setLoopData } from "../redux/loopSlice.js";
 import { VscMute } from "react-icons/vsc";
 import { GoUnmute } from "react-icons/go";
 import FollowBtn from "./FollowBtn.jsx";
-
+import { IoSend } from "react-icons/io5";
 
 const LoopCard = ({loop, userData})=>{
 
@@ -18,6 +18,9 @@ const LoopCard = ({loop, userData})=>{
     const [isMuted, setIsMuted] = useState(false)
     const [progress, setProgress] = useState(0)
     const [showHeart, setShowHeart] = useState(false);
+    const [showCommentsPopup, setShowCommentsPopup] = useState(false)
+    const [message, setMessage] = useState('')
+    
 
     const handleLike = async(loopId)=>{
         const result  = await axios.get(`http://localhost:4000/api/loop/like/${loopId}`, {withCredentials:true})
@@ -83,12 +86,49 @@ const LoopCard = ({loop, userData})=>{
         setProgress(percent)
     }
 
-    return <div className="w-full h-screen snap-center relative">
+
+    const commentPopupRef = useRef()
+    useEffect(()=>{
+        const handleMouseDownEvent = (e)=>{
+            if (!commentPopupRef.current) return;
+
+            if(e.target != commentPopupRef.current && !commentPopupRef.current.contains(e.target)){
+                setShowCommentsPopup(false) 
+            }else{
+                setShowCommentsPopup(true)
+            }
+        }
+
+        if(showCommentsPopup){
+            document.addEventListener("mousedown", (e)=>{handleMouseDownEvent(e)})
+        }else{
+            document.removeEventListener("mousedown",(e)=>{handleMouseDownEvent(e)})
+        }
+
+    },[showCommentsPopup])
+
+     const handleCommentOnLoop = async(loopId)=>{
+        try{
+            const result = await axios.post(`http://localhost:4000/api/loop/comment/${loopId}`, {message}, {withCredentials : true})
+            let updatedLoopsData = loopData.map(loop=>{
+                return loop._id == loopId ? result.data : loop
+            })
+            dispatch(setLoopData(updatedLoopsData))
+            setMessage('')
+        }
+        catch(error){
+            console.log("Error occred in comment on post = ", error)
+            setMessage('')
+        }
+    }
+
+
+    return <div className="snap-center relative overflow-hidden">
         <div className="absolute top-[1.5rem] right-[1rem] z-[100] cursor-pointer" onClick={()=> setIsMuted(!isMuted)}>
             {isMuted ? <VscMute className="text-white text-2xl" /> : <GoUnmute  className="text-white text-2xl "  />}
         </div>
         {/* custom video tag */}
-        <video src={loop.media} autoPlay loop  muted={isMuted}  className="w-full h-full object-cover" ref={videoRef} onTimeUpdate={handleProgress} onClick={()=> {
+        <video src={loop.media} autoPlay loop  muted={isMuted}  className="h-screen w-screen object-cover" ref={videoRef} onTimeUpdate={handleProgress} onClick={()=> {
             setClickedOnVideo(!clickedOnVideo)
             handleClickOnVideo()
         }} onDoubleClick={()=> handleLikeOnDoubleClick(loop._id)}></video>
@@ -97,7 +137,7 @@ const LoopCard = ({loop, userData})=>{
             <div className="flex items-center gap-[15px]" >
                 <div className="flex gap-[10px] items-center" >
                     <div><img src={loop.author?.profileImage} alt="profileImage" className="w-[4rem] h-[4rem] rounded-[50%]" /></div>
-                    <div>{loop.author?.username.length > 10 ? loop.author.username.slice(0, 10)+"..." :loop.author?.username }</div>
+                    <div>{loop.author?.username?.length > 10 ? loop.author.username.slice(0, 10)+"..." :loop.author?.username }</div>
                 </div>
                 { loop.author?._id !== userData._id && <FollowBtn targetUserId={loop.author?._id} tailwind={"text-white border-2 border-white bg-transparent px-[15px] py-[10px] rounded-4xl"} />}
             </div>
@@ -113,14 +153,45 @@ const LoopCard = ({loop, userData})=>{
             {loop.likes.some((user)=> user._id == userData._id)  && <FaHeart className="text-red-700 text-4xl cursor-pointer"  onClick={()=> handleLike(loop._id)} />}
             {!loop.likes.some((user)=> user._id == userData._id) && <FaRegHeart className="cursor-pointer text-4xl  text-white" onClick={()=> handleLike(loop._id)} />}
             <span className="text-lg text-white">{loop.likes?.length}</span>
-            <LuMessageSquareText className="cursor-pointer text-4xl  text-white"/>
+            <LuMessageSquareText className="cursor-pointer text-4xl  text-white" onClick={()=> setShowCommentsPopup(!showCommentsPopup)} />
             <span className="text-lg text-white">{loop.comments?.length}</span>
         </div>
         {/* heart icon on double click */}
         {showHeart && ( <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[300] heart-animation">
             <FaHeart className="text-[5rem] text-white" />
         </div>)}
+        {/* show comment popup */}
+        <div ref={commentPopupRef}  className={`pt-[15px] absolute z-[400] bottom-0 left-0 w-[100%] h-[65%] rounded-tl-3xl rounded-tr-3xl bg-black transform transition-all duration-300 ease-in-out ${showCommentsPopup ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}>
+            <div className="w-[100%] h-[100%] px-[10px] flex flex-col gap-[15px] items-start overflow-y-auto hide-scrollbar text-white">
+                <div className="w-full flex justify-center text-2xl"><h1>Coments</h1></div>
+                {
+                    loop.comments.map(comment=>{
+                        return  <div>
+                            <div className="flex gap-[10px] items-center justify-start">
+                                <div>
+                                    <img src={comment.author?.profileImage} alt="" className="w-[3rem] h-[3rem] rounded-[50%]" />
+                                </div>
+                                <div>{comment.author?.username}</div>
+                            </div>
+                            <div className="pl-[3rem]">{comment.message}</div>
+                        </div>
+                    })
+                }
+            </div>
 
+            <div className="fixed bg-black w-full h-[6rem] bottom-0 flex justify-center items-end pb-[10px]">
+                <div className="w-[90%] flex gap-[10px] text-white border-white border-b-2 pb-2">
+                    <div className="flex gap-[8px] items-center">
+                        <div><img src={userData?.profileImage} alt="profileImage" className="w-[3.5rem] h-[3rem] rounded-[50%]" /></div>
+                    </div>
+                    <input type="text" name="comment" id="" value={message} placeholder="Write your comment here" className="w-full outline-none" onChange={(e)=> setMessage(e.target.value)}/>
+                    <button className="cursor-pointer" onClick={()=> {handleCommentOnLoop(loop._id)}}><IoSend /></button>
+                </div> 
+            </div>
+
+            
+        </div>
+        
     </div>
 }
 export default LoopCard

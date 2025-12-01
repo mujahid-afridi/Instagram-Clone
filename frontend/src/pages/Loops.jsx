@@ -16,7 +16,7 @@ const Loops = ()=>{
             <IoArrowBackSharp className="cursor-pointer" onClick={()=> navigate(`/`)}/>
             <div>Loops</div>
         </div>
-        <div className=" w-screen h-screen  md:w-[600px] md:border-x-2 md:border-gray-600 overflow-y-scroll snap-y snap-mandatory hide-scrollbar">
+        <div className=" w-screen h-screen  md:w-[500px] md:border-x-2 md:border-gray-600 overflow-y-scroll snap-y snap-mandatory hide-scrollbar">
             {loopData.map((loop, index)=>{
                 return <LoopCard loop={loop} userData={userData} key={index}/>
             })}
