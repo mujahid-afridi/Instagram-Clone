@@ -56,6 +56,7 @@ export const like = async (req,res)=>{
         await loop.save()
         await loop.populate("likes")
         await loop.populate("author")
+        await loop.populate("comments.author");
         return res.status(200).json(loop)
     }
     catch(error){
@@ -75,7 +76,7 @@ export const comment = async(req, res)=>{
         loop.comments.unshift({message, author: user._id})
         await loop.save()
         await loop.populate("author")
-        await loop.populate("comments.author")
+        await loop.populate("comments.author");
         return res.status(200).json(loop)
     }
     catch(error){

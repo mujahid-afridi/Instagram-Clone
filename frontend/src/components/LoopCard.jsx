@@ -70,10 +70,8 @@ const LoopCard = ({loop, userData})=>{
 
     const handleClickOnVideo = ()=>{
         if(clickedOnVideo){
-            console.log("paly video")
             videoRef.current.play()
         }else{
-            console.log("pause video")
             videoRef.current.pause()
         }
     }
@@ -162,7 +160,7 @@ const LoopCard = ({loop, userData})=>{
         </div>)}
         {/* show comment popup */}
         <div ref={commentPopupRef}  className={`pt-[15px] absolute z-[400] bottom-0 left-0 w-[100%] h-[65%] rounded-tl-3xl rounded-tr-3xl bg-black transform transition-all duration-300 ease-in-out ${showCommentsPopup ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}>
-            <div className="w-[100%] h-[100%] px-[10px] flex flex-col gap-[15px] items-start overflow-y-auto hide-scrollbar text-white">
+            <div className="w-[100%] h-[calc(100%-6.5rem)] px-[10px] flex flex-col gap-[15px] items-start overflow-y-auto hide-scrollbar text-white">
                 <div className="w-full flex justify-center text-2xl"><h1>Coments</h1></div>
                 {
                     loop.comments.map(comment=>{
@@ -179,13 +177,13 @@ const LoopCard = ({loop, userData})=>{
                 }
             </div>
 
-            <div className="fixed bg-black w-full h-[6rem] bottom-0 flex justify-center items-end pb-[10px]">
+            <div className="fixed bg-black w-full h-[6rem] bottom-0 flex justify-center items-end pb-[20px]">
                 <div className="w-[90%] flex gap-[10px] text-white border-white border-b-2 pb-2">
                     <div className="flex gap-[8px] items-center">
                         <div><img src={userData?.profileImage} alt="profileImage" className="w-[3.5rem] h-[3rem] rounded-[50%]" /></div>
                     </div>
                     <input type="text" name="comment" id="" value={message} placeholder="Write your comment here" className="w-full outline-none" onChange={(e)=> setMessage(e.target.value)}/>
-                    <button className="cursor-pointer" onClick={()=> {handleCommentOnLoop(loop._id)}}><IoSend /></button>
+                    {message && <button className="cursor-pointer" onClick={()=> {handleCommentOnLoop(loop._id)}}><IoSend /></button>}
                 </div> 
             </div>
 

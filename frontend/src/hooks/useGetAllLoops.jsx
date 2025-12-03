@@ -7,6 +7,7 @@ import { setLoopData } from "../redux/loopSlice.js"
 const useGetAllLoops = ()=>{
     const dispatch = useDispatch()
     const {userData} = useSelector(state=> state.user)
+    const {loopData} = useSelector(state=> state.loop)
     useEffect(()=>{
         const getAllLoops = async()=>{
             try{
