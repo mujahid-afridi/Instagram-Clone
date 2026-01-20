@@ -37,7 +37,7 @@ const StoryCard = ({story})=>{
 
     return <div className="relative border-x-2 border-gray-600">
 
-        <div className="text-white flex items-center justify-between w-full px-2 absolute right-0 top-[1rem]">
+        <div className="text-white flex items-center justify-between w-full px-2 absolute right-[-1px] top-[1rem]">
             <div className="flex gap-[7px]">
                 <div><img src={story.author?.profileImage} alt="profile image" className="rounded-[50%] w-[3rem] h-[3rem]" /></div>
                 <div>{story.author?.username} <span>15hr</span></div>
